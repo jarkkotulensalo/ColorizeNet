@@ -29,12 +29,12 @@ Run the `gradio_colorization.py` and load your image via the interface
 
 BW Input             |  Colorized
 :-------------------------:|:-------------------------:
-![image](docs/sample1_bw.jpg) | ![image](docs/sample1.png)
-![image](docs/sample2_bw.jpg) | ![image](docs/sample2.png)
-![image](docs/sample3_bw.jpg) | ![image](docs/sample3.png)
-![image](docs/sample4_bw.jpg) | ![image](docs/sample4.png)
-![image](docs/sample5_bw.jpg) | ![image](docs/sample5.png)
-![image](docs/sample6_bw.jpg) | ![image](docs/sample6.png)
+![image](docs/imgs/sample1_bw.jpg) | ![image](docs/imgs/sample1.png)
+![image](docs/imgs/sample2_bw.jpg) | ![image](docs/imgs/sample2.png)
+![image](docs/imgs/sample3_bw.jpg) | ![image](docs/imgs/sample3.png)
+![image](docs/imgs/sample4_bw.jpg) | ![image](docs/imgs/sample4.png)
+![image](docs/imgs/sample5_bw.jpg) | ![image](docs/imgs/sample5.png)
+![image](docs/imgs/sample6_bw.jpg) | ![image](docs/imgs/sample6.png)
 
 ## Additional Resources
 For more information on ControlNet, please refer to the [original repository](https://github.com/lllyasviel/ControlNet)
