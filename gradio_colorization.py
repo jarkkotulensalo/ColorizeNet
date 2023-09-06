@@ -16,7 +16,7 @@ from cldm.ddim_hacked import DDIMSampler
 
 model = create_model('./models/cldm_v21.yaml').cpu()
 model.load_state_dict(load_state_dict(
-    'colorizenet-sd21.ckpt', location='cuda'))
+    'weights/colorizenet-sd21.ckpt', location='cuda'))
 model = model.cuda()
 ddim_sampler = DDIMSampler(model)
 
