@@ -27,42 +27,11 @@ Run the `gradio_colorization.py` and load your image via the interface
 
 ## Results
 
-<table>
-  <thead>
-    <tr>
-      <th style="text-align:center"> BW Input </th>
-      <th style="text-align:center"> Colorized </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="width: 50%;"> <img src="docs/imgs/sample1_bw.jpg"  alt="1"></td>
-      <td style="width: 50%;"><img src="docs/imgs/sample1.png" alt="2"></td>
-   </tr> 
-    <tr>
-      <td style="width: 50%;"> <img src="docs/imgs/sample2_bw.jpg"  alt="1"></td>
-      <td style="width: 50%;"><img src="docs/imgs/sample2.png" alt="2"></td>
-   </tr> 
-    <tr>
-      <td style="width: 50%;"> <img src="docs/imgs/sample3_bw.jpg"  alt="1"></td>
-      <td style="width: 50%;"><img src="docs/imgs/sample3.png" alt="2"></td>
-   </tr> 
-    <tr>
-      <td style="width: 50%;"> <img src="docs/imgs/sample4_bw.jpg"  alt="1"></td>
-      <td style="width: 50%;"><img src="docs/imgs/sample4.png" alt="2"></td>
-   </tr> 
-    <tr>
-      <td style="width: 50%;"> <img src="docs/imgs/sample5_bw.jpg"  alt="1"></td>
-      <td style="width: 50%;"><img src="docs/imgs/sample5.png" alt="2"></td>
-   </tr> 
-    <tr>
-      <td style="width: 50%;"> <img src="docs/imgs/sample6_bw.jpg"  alt="1"></td>
-      <td style="width: 50%;"><img src="docs/imgs/sample6.png" alt="2"></td>
-   </tr> 
-  </tbody>
-  </td>
-  </tr>
-</table>
+![image](docs/imgs/sample1.png)
+![image](docs/imgs/sample2.png)
+![image](docs/imgs/sample3.png)
+![image](docs/imgs/sample4.png)
+![image](docs/imgs/sample5.png)
 
 ## Additional Resources
 For more information on ControlNet, please refer to the [original repository](https://github.com/lllyasviel/ControlNet)
