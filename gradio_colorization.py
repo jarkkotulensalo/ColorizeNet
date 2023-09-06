@@ -76,7 +76,7 @@ def process(input_image, prompt, a_prompt, n_prompt, num_samples, image_resoluti
 
         results = [x_samples[i] for i in range(num_samples)]
         colored_results = [apply_color(img, result) for result in results]
-    return [img] + results + colored_results
+    return [img] + colored_results
 
 
 block = gr.Blocks().queue()
@@ -109,7 +109,7 @@ with block:
                                       value='longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality')
         with gr.Column():
             result_gallery = gr.Gallery(
-                label='Output', show_label=False, elem_id="gallery").style(grid=3, height='auto')
+                label='Output', show_label=False, elem_id="gallery").style(grid=2, height='auto')
     ips = [input_image, prompt, a_prompt, n_prompt, num_samples, image_resolution,
            ddim_steps, guess_mode, strength, scale, seed, eta]
     run_button.click(fn=process, inputs=ips, outputs=[result_gallery])
