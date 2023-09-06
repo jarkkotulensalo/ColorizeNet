@@ -23,7 +23,7 @@ The model has been trained on COCO, using all the images in the dataset and conv
 
 ### Run the model with Gradio
 
-Run the `gradio_colorization.py` and load your image via the interface
+Run the `gradio_colorization.py` and load your image via the interface. The results have been generated without using additional text prompts.
 
 ## Results
 
