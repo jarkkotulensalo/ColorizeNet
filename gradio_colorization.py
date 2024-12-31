@@ -5,6 +5,8 @@ import cv2
 import einops
 import gradio as gr
 import numpy as np
+import os
+from PIL import Image
 import torch
 import random
 
@@ -13,12 +15,24 @@ from annotator.util import resize_image, HWC3
 from cldm.model import create_model, load_state_dict
 from cldm.ddim_hacked import DDIMSampler
 
+if torch.cuda.is_available():
+    print("CUDA is enabled!")
+    print(f"Device count: {torch.cuda.device_count()}")
+    print(f"Current device: {torch.cuda.current_device()}")
+    print(f"Device name: {torch.cuda.get_device_name(torch.cuda.current_device())}")
+else:
+    print("CUDA is not enabled.")
+
+assert os.path.exists('./models/cldm_v21.yaml'), "Model YAML file not found!"
+assert os.path.exists('weights/colorizenet-sd21.ckpt'), "Model weights file not found!"
 
 model = create_model('./models/cldm_v21.yaml').cpu()
 model.load_state_dict(load_state_dict(
     'weights/colorizenet-sd21.ckpt', location='cuda'))
 model = model.cuda()
 ddim_sampler = DDIMSampler(model)
+
+# print 
 
 
 def apply_color(image, color_map):
@@ -35,10 +49,22 @@ def apply_color(image, color_map):
 
 
 def process(input_image, prompt, a_prompt, n_prompt, num_samples, image_resolution, ddim_steps, guess_mode, strength, scale, seed, eta):
+    if input_image is None:
+        return ["No input image provided."]
+     # Validation
+    if image_resolution < 256 or image_resolution > 768:
+        return ["Invalid image resolution!"]
+    if num_samples < 1 or num_samples > 12:
+        return ["Invalid number of samples!"]
+    
+    print("Input image shape:", input_image.shape)
+    
     with torch.no_grad():
         input_image = HWC3(input_image)
         img = resize_image(input_image, image_resolution)
         H, W, C = img.shape
+
+        print("Processing image with shape:", img.shape)
 
         control = torch.from_numpy(img.copy()).float().cuda() / 255.0
         control = torch.stack([control for _ in range(num_samples)], dim=0)
@@ -49,8 +75,10 @@ def process(input_image, prompt, a_prompt, n_prompt, num_samples, image_resoluti
         seed_everything(seed)
 
         if config.save_memory:
+            print("Saving memory with low vram shift...")
             model.low_vram_shift(is_diffusing=False)
 
+        print("Setting up conditioning...")
         cond = {"c_concat": [control], "c_crossattn": [
             model.get_learned_conditioning([prompt + ', ' + a_prompt] * num_samples)]}
         un_cond = {"c_concat": None if guess_mode else [control], "c_crossattn": [
@@ -60,19 +88,26 @@ def process(input_image, prompt, a_prompt, n_prompt, num_samples, image_resoluti
         if config.save_memory:
             model.low_vram_shift(is_diffusing=True)
 
+        print("Setting control scales...")
         model.control_scales = [strength * (0.825 ** float(12 - i)) for i in range(13)] if guess_mode else (
             [strength] * 13)  # Magic number. IDK why. Perhaps because 0.825**12<0.01 but 0.826**12>0.01
+        
+        print("Sampling...")
         samples, intermediates = ddim_sampler.sample(ddim_steps, num_samples,
                                                      shape, cond, verbose=False, eta=eta,
                                                      unconditional_guidance_scale=scale,
                                                      unconditional_conditioning=un_cond)
+        print("Sampling done!")
 
         if config.save_memory:
+            print("Saving memory with low vram shift...")
             model.low_vram_shift(is_diffusing=False)
 
+        print("Decoding...")
         x_samples = model.decode_first_stage(samples)
         x_samples = (einops.rearrange(x_samples, 'b c h w -> b h w c')
                      * 127.5 + 127.5).cpu().numpy().clip(0, 255).astype(np.uint8)
+        print("Decoding done!")
 
         results = [x_samples[i] for i in range(num_samples)]
         colored_results = [apply_color(img, result) for result in results]
@@ -101,7 +136,7 @@ with block:
                 scale = gr.Slider(label="Guidance Scale",
                                   minimum=0.1, maximum=30.0, value=9.0, step=0.1)
                 seed = gr.Slider(label="Seed", minimum=-1,
-                                 maximum=2147483647, step=1, randomize=True)
+                                 maximum=2147483647, step=1, value=-1)
                 eta = gr.Number(label="eta (DDIM)", value=0.0)
                 a_prompt = gr.Textbox(
                     label="Added Prompt", value='best quality, natural colors')
